@@ -163,6 +163,7 @@ entity Event {
     isPublished Boolean
 }
 
+@dto(mapstruct)
 entity Administrator {
     jobTitle    String,
     description String
@@ -243,4 +244,4 @@ relationship ManyToMany {
     UnavailabilityPeriod to Advisor
     UnavailabilityPeriod to PartnerRepresentative
 }
-service Administrator with serviceClass
+service Administrator with serviceClass 
