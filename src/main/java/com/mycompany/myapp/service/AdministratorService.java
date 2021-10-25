@@ -2,8 +2,12 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.Administrator;
 import com.mycompany.myapp.repository.AdministratorRepository;
+import com.mycompany.myapp.service.dto.AdministratorDTO;
+import com.mycompany.myapp.service.mapper.AdministratorMapper;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,43 +24,44 @@ public class AdministratorService {
 
     private final AdministratorRepository administratorRepository;
 
-    public AdministratorService(AdministratorRepository administratorRepository) {
+    private final AdministratorMapper administratorMapper;
+
+    public AdministratorService(AdministratorRepository administratorRepository, AdministratorMapper administratorMapper) {
         this.administratorRepository = administratorRepository;
+        this.administratorMapper = administratorMapper;
     }
 
     /**
      * Save a administrator.
      *
-     * @param administrator the entity to save.
+     * @param administratorDTO the entity to save.
      * @return the persisted entity.
      */
-    public Administrator save(Administrator administrator) {
-        log.debug("Request to save Administrator : {}", administrator);
-        return administratorRepository.save(administrator);
+    public AdministratorDTO save(AdministratorDTO administratorDTO) {
+        log.debug("Request to save Administrator : {}", administratorDTO);
+        Administrator administrator = administratorMapper.toEntity(administratorDTO);
+        administrator = administratorRepository.save(administrator);
+        return administratorMapper.toDto(administrator);
     }
 
     /**
      * Partially update a administrator.
      *
-     * @param administrator the entity to update partially.
+     * @param administratorDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<Administrator> partialUpdate(Administrator administrator) {
-        log.debug("Request to partially update Administrator : {}", administrator);
+    public Optional<AdministratorDTO> partialUpdate(AdministratorDTO administratorDTO) {
+        log.debug("Request to partially update Administrator : {}", administratorDTO);
 
         return administratorRepository
-            .findById(administrator.getId())
+            .findById(administratorDTO.getId())
             .map(existingAdministrator -> {
-                if (administrator.getJobTitle() != null) {
-                    existingAdministrator.setJobTitle(administrator.getJobTitle());
-                }
-                if (administrator.getDescription() != null) {
-                    existingAdministrator.setDescription(administrator.getDescription());
-                }
+                administratorMapper.partialUpdate(existingAdministrator, administratorDTO);
 
                 return existingAdministrator;
             })
-            .map(administratorRepository::save);
+            .map(administratorRepository::save)
+            .map(administratorMapper::toDto);
     }
 
     /**
@@ -65,9 +70,9 @@ public class AdministratorService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Administrator> findAll() {
+    public List<AdministratorDTO> findAll() {
         log.debug("Request to get all Administrators");
-        return administratorRepository.findAll();
+        return administratorRepository.findAll().stream().map(administratorMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -77,9 +82,9 @@ public class AdministratorService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Administrator> findOne(Long id) {
+    public Optional<AdministratorDTO> findOne(Long id) {
         log.debug("Request to get Administrator : {}", id);
-        return administratorRepository.findById(id);
+        return administratorRepository.findById(id).map(administratorMapper::toDto);
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.mycompany.myapp.web.rest;
 
-import com.mycompany.myapp.domain.Administrator;
 import com.mycompany.myapp.repository.AdministratorRepository;
 import com.mycompany.myapp.service.AdministratorService;
+import com.mycompany.myapp.service.dto.AdministratorDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,17 +45,18 @@ public class AdministratorResource {
     /**
      * {@code POST  /administrators} : Create a new administrator.
      *
-     * @param administrator the administrator to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new administrator, or with status {@code 400 (Bad Request)} if the administrator has already an ID.
+     * @param administratorDTO the administratorDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new administratorDTO, or with status {@code 400 (Bad Request)} if the administrator has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/administrators")
-    public ResponseEntity<Administrator> createAdministrator(@Valid @RequestBody Administrator administrator) throws URISyntaxException {
-        log.debug("REST request to save Administrator : {}", administrator);
-        if (administrator.getId() != null) {
+    public ResponseEntity<AdministratorDTO> createAdministrator(@Valid @RequestBody AdministratorDTO administratorDTO)
+        throws URISyntaxException {
+        log.debug("REST request to save Administrator : {}", administratorDTO);
+        if (administratorDTO.getId() != null) {
             throw new BadRequestAlertException("A new administrator cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Administrator result = administratorService.save(administrator);
+        AdministratorDTO result = administratorService.save(administratorDTO);
         return ResponseEntity
             .created(new URI("/api/administrators/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -65,23 +66,23 @@ public class AdministratorResource {
     /**
      * {@code PUT  /administrators/:id} : Updates an existing administrator.
      *
-     * @param id the id of the administrator to save.
-     * @param administrator the administrator to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated administrator,
-     * or with status {@code 400 (Bad Request)} if the administrator is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the administrator couldn't be updated.
+     * @param id the id of the administratorDTO to save.
+     * @param administratorDTO the administratorDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated administratorDTO,
+     * or with status {@code 400 (Bad Request)} if the administratorDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the administratorDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/administrators/{id}")
-    public ResponseEntity<Administrator> updateAdministrator(
+    public ResponseEntity<AdministratorDTO> updateAdministrator(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody Administrator administrator
+        @Valid @RequestBody AdministratorDTO administratorDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Administrator : {}, {}", id, administrator);
-        if (administrator.getId() == null) {
+        log.debug("REST request to update Administrator : {}, {}", id, administratorDTO);
+        if (administratorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, administrator.getId())) {
+        if (!Objects.equals(id, administratorDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -89,34 +90,34 @@ public class AdministratorResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Administrator result = administratorService.save(administrator);
+        AdministratorDTO result = administratorService.save(administratorDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, administrator.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, administratorDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /administrators/:id} : Partial updates given fields of an existing administrator, field will ignore if it is null
      *
-     * @param id the id of the administrator to save.
-     * @param administrator the administrator to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated administrator,
-     * or with status {@code 400 (Bad Request)} if the administrator is not valid,
-     * or with status {@code 404 (Not Found)} if the administrator is not found,
-     * or with status {@code 500 (Internal Server Error)} if the administrator couldn't be updated.
+     * @param id the id of the administratorDTO to save.
+     * @param administratorDTO the administratorDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated administratorDTO,
+     * or with status {@code 400 (Bad Request)} if the administratorDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the administratorDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the administratorDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/administrators/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Administrator> partialUpdateAdministrator(
+    public ResponseEntity<AdministratorDTO> partialUpdateAdministrator(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody Administrator administrator
+        @NotNull @RequestBody AdministratorDTO administratorDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Administrator partially : {}, {}", id, administrator);
-        if (administrator.getId() == null) {
+        log.debug("REST request to partial update Administrator partially : {}, {}", id, administratorDTO);
+        if (administratorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, administrator.getId())) {
+        if (!Objects.equals(id, administratorDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -124,11 +125,11 @@ public class AdministratorResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Administrator> result = administratorService.partialUpdate(administrator);
+        Optional<AdministratorDTO> result = administratorService.partialUpdate(administratorDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, administrator.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, administratorDTO.getId().toString())
         );
     }
 
@@ -138,7 +139,7 @@ public class AdministratorResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of administrators in body.
      */
     @GetMapping("/administrators")
-    public List<Administrator> getAllAdministrators() {
+    public List<AdministratorDTO> getAllAdministrators() {
         log.debug("REST request to get all Administrators");
         return administratorService.findAll();
     }
@@ -146,20 +147,20 @@ public class AdministratorResource {
     /**
      * {@code GET  /administrators/:id} : get the "id" administrator.
      *
-     * @param id the id of the administrator to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the administrator, or with status {@code 404 (Not Found)}.
+     * @param id the id of the administratorDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the administratorDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/administrators/{id}")
-    public ResponseEntity<Administrator> getAdministrator(@PathVariable Long id) {
+    public ResponseEntity<AdministratorDTO> getAdministrator(@PathVariable Long id) {
         log.debug("REST request to get Administrator : {}", id);
-        Optional<Administrator> administrator = administratorService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(administrator);
+        Optional<AdministratorDTO> administratorDTO = administratorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(administratorDTO);
     }
 
     /**
      * {@code DELETE  /administrators/:id} : delete the "id" administrator.
      *
-     * @param id the id of the administrator to delete.
+     * @param id the id of the administratorDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/administrators/{id}")
