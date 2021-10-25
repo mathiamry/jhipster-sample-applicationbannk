@@ -183,7 +183,7 @@ entity File {
     name    String,
     url     String required
 }
-
+@dto(mapstruct)
 entity  Person {
     firstName   String required,
     lastName    String required,
@@ -244,4 +244,4 @@ relationship ManyToMany {
     UnavailabilityPeriod to Advisor
     UnavailabilityPeriod to PartnerRepresentative
 }
-service Administrator with serviceClass 
+service Administrator, Person with serviceClass 
