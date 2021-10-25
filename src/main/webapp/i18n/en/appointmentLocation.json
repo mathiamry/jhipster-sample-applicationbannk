@@ -1,0 +1,9 @@
+{
+  "jhipsterSampleApplicationbankApp": {
+    "AppointmentLocation": {
+      "null": "",
+      "ONSITE": "ONSITE",
+      "ONLINE": "ONLINE"
+    }
+  }
+}

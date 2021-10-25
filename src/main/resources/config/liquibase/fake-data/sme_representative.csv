@@ -1,0 +1,11 @@
+id;job_title;is_admin;is_manager;person_id;sme_id
+1;District Tactics Liaison;true;false;1;1
+2;Forward Security Designer;false;false;2;2
+3;Global Group Director;false;true;3;3
+4;Dynamic Paradigm Manager;true;true;4;4
+5;Investor Infrastructure Associate;true;true;5;5
+6;Direct Operations Agent;true;false;6;6
+7;Senior Security Representative;false;false;7;7
+8;Chief Response Facilitator;true;true;8;8
+9;Lead Branding Coordinator;false;true;9;9
+10;Corporate Marketing Supervisor;false;true;10;10
