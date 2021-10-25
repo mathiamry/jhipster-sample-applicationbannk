@@ -16,6 +16,7 @@ entity Turnover {
     description String
 }
 
+@dto(mapstruct)
 entity Language {
     name    String required,
     key     String required
@@ -58,6 +59,7 @@ entity Bank {
     description String
 }
 
+@dto(mapstruct)
 entity Country {
     name    String required
 }
@@ -244,4 +246,4 @@ relationship ManyToMany {
     UnavailabilityPeriod to Advisor
     UnavailabilityPeriod to PartnerRepresentative
 }
-service Administrator, Person with serviceClass 
+service Administrator, Person, Language, Country with serviceClass 
